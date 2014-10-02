@@ -29,6 +29,11 @@ class SubstitutePlayer(xbmc.Player):
         if self.active:
             self.startAllTorrents()
 
+    def onPlayBackEnded(self):
+        self.refreshSettings()
+        if self.active:
+            self.startAllTorrents()		            
+
     def startAllTorrents(self):
         if self.transmission:
             torrents = self.transmission.list()
