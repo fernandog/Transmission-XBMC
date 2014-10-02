@@ -5,5 +5,6 @@
     <setting id="rpc_port" type="number" label="32802" default="9091" />
     <setting id="rpc_user" type="text" label="32803" default="" />
     <setting id="rpc_password" type="text" option="hidden" label="32804" default="" />
-    <setting id="stop_all_on_playback" type="bool" label="32805" default="false" />
+    <setting id="action_on_playback" type="enum" label="32805" lvalues="32806|32807|32808" />
+    <setting id="seconds_playback_finished" type="slider" label="32809" range="1,60" default="1" option="int" />	
 </settings>

@@ -169,7 +169,23 @@ msgid "Password"
 msgstr ""
 
 msgctxt "#32805"
-msgid "Stop all torrents on video playback"
+msgid "Action on video playback"
+msgstr ""
+
+msgctxt "#32806"
+msgid "None"
+msgstr ""
+
+msgctxt "#32807"
+msgid "Pause all torrents"
+msgstr ""
+
+msgctxt "#32808"
+msgid "Enable Temporary Speed Limits"
+msgstr ""
+
+msgctxt "#32809"
+msgid "How many seconds to wait before execute the action"
 msgstr ""
 
 #Errors
