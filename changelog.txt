@@ -1,3 +1,9 @@
+Version 0.7.7
+        * Added option to enable alternate speed limite instead of pause
+        * Added option to choose wait X seconds to undo the action (when user finished one movie and start another)
+        * Fixed the issue when the video ended the action won't started. The code was only detecting the "stop" of the video
+        * Added option to don't pause seeding torrents (related to Private Trackers and seeding bonus)
+        * Added actions notifications			
 Version 0.7.6
         * Updated transmissionrpc library to 0.11, including a patch for gzipped http responses
         * Fixed an issue listing torrents

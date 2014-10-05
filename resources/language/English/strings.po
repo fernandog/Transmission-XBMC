@@ -185,11 +185,15 @@ msgid "Enable Temporary Speed Limits"
 msgstr ""
 
 msgctxt "#32809"
-msgid "How many seconds to wait before execute the action"
+msgid "Undo the action after given seconds"
+msgstr ""
+
+msgctxt "#32810"
+msgid "Don't pause seeding torrents"
 msgstr ""
 
 #Errors
-#empty strings from id 32806 to 32899
+#empty strings from id 32811 to 32899
 
 msgctxt "#32900"
 msgid "An unexpected error occurred"
