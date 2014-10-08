@@ -23,40 +23,38 @@ class SubstitutePlayer(xbmc.Player):
         xbmc.Player.__init__(self)
         self.prev_settings = {}
         self.refreshSettings()
+        self.timeron = False		
 
     def onPlayBackStarted(self):
         self.refreshSettings()
-        if self.mode != '0' and xbmc.Player().isPlayingVideo():
+        if self.mode != '0' and xbmc.Player().isPlayingVideo() == True and self.timeron == False:
             if self.mode == '1':
                 self.stopAllTorrents()
             elif self.mode == '2':
                 self.enableSpeedLimit()
 
-    def onPlayBackStopped(self):
-        xbmc.sleep(1)	
+    def ResumingTorrents(self):
+        xbmc.sleep(1)
+        self.refreshSettings()
         if self.mode == '1' and not xbmc.Player().isPlayingVideo():
             xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Torrents will be started in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
         elif self.mode == '2' and not xbmc.Player().isPlayingVideo():
             xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Speed limited will be disabled in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
+        self.timeron = True
         xbmc.sleep(int(self.seconds))
-        self.refreshSettings()
-        if self.mode == '1' and not xbmc.Player().isPlayingVideo():
+        self.timeron = False		
+        if self.mode == '1' and xbmc.Player().isPlayingVideo() == False:
             self.startAllTorrents()
-        elif self.mode == '2' and not xbmc.Player().isPlayingVideo():
-            self.disableSpeedLimit()		
+        elif self.mode == '2' and xbmc.Player().isPlayingVideo() == False:
+            self.disableSpeedLimit()
+        else:
+            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Still watching. Torrents still paused/limited",5000, __icon__))			
 
     def onPlayBackEnded(self):
-        xbmc.sleep(1)		
-        if self.mode == '1' and not xbmc.Player().isPlayingVideo():
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Torrents will be re-started in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
-        elif self.mode == '2' and not xbmc.Player().isPlayingVideo():
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Speed limited will be disabled in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
-        xbmc.sleep(int(self.seconds))
-        self.refreshSettings()
-        if self.mode == '1' and not xbmc.Player().isPlayingVideo():
-            self.startAllTorrents()
-        elif self.mode == '2' and not xbmc.Player().isPlayingVideo():
-            self.disableSpeedLimit()
+        self.ResumingTorrents()
+
+    def onPlayBackStopped(self):	
+        self.ResumingTorrents()
 			
     def startAllTorrents(self):
         if self.transmission:

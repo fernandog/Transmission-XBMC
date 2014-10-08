@@ -73,23 +73,24 @@ class TransmissionGUI(xbmcgui.WindowXMLDialog):
         list = self.getControl(120)
         self.torrents = self.transmission.info()
         for i, torrent in self.torrents.iteritems():
-            statusline = "[%(status)s] %(down)s down (%(pct).2f%%), %(up)s up (Ratio: %(ratio).2f)" % \
-                {'down': Bytes.format(torrent.downloadedEver), 'pct': torrent.progress, \
-                'up': Bytes.format(torrent.uploadedEver), 'ratio': torrent.ratio, \
-                'status': torrent.status}
-            if i not in self.list:
-                # Create a new list item
-                l = xbmcgui.ListItem(label=torrent.name, label2=statusline)
-                list.addItem(l)
-                self.list[i] = l
-            else:
-                # Update existing list item
-                l = self.list[i]
-            l.setLabel(torrent.name)
-            l.setLabel2(statusline)
-            l.setProperty('TorrentStatusIcon', STATUS_ICONS.get(torrent.status, 'pending.png'))
-            l.setProperty('TorrentID', str(i))
-            l.setProperty('TorrentProgress', "%3d%%" % torrent.progress)
+            if not torrent.status == 'seeding':
+                statusline = "[%(status)s] %(down)s down (%(pct).2f%%), %(up)s up (Ratio: %(ratio).2f)" % \
+                    {'down': Bytes.format(torrent.downloadedEver), 'pct': torrent.progress, \
+                    'up': Bytes.format(torrent.uploadedEver), 'ratio': torrent.ratio, \
+                    'status': torrent.status}
+                if i not in self.list:
+                    # Create a new list item
+                    l = xbmcgui.ListItem(label=torrent.name, label2=statusline)
+                    list.addItem(l)
+                    self.list[i] = l
+                else:
+                    # Update existing list item
+                    l = self.list[i]
+                l.setLabel(torrent.name)
+                l.setLabel2(statusline)
+                l.setProperty('TorrentStatusIcon', STATUS_ICONS.get(torrent.status, 'pending.png'))
+                l.setProperty('TorrentID', str(i))
+                l.setProperty('TorrentProgress', "%3d%%" % torrent.progress)
 
         removed = [id for id in self.list.keys() if id not in self.torrents.keys()]
         if len(removed) > 0:
