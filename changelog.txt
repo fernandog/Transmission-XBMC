@@ -1,3 +1,5 @@
+Version 0.7.8
+        * Pause torrents every 2 minutes (pause torrents started after video started)
 Version 0.7.7
         * Added option to enable alternate speed limite instead of pause
         * Added option to choose wait X seconds to undo the action (when user finished one movie and start another)

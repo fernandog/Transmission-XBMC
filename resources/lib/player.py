@@ -7,6 +7,7 @@ import xbmc, xbmcaddon, xbmcgui
 import transmissionrpc
 import urllib
 import subprocess
+import common
 
 __settings__ = xbmcaddon.Addon(id='script.transmission')
 __addon__       = xbmcaddon.Addon()
@@ -16,19 +17,18 @@ __icon__        = __addon__.getAddonInfo('icon')
 BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( __settings__.getAddonInfo('path'), 'resources', 'lib' ) )
 sys.path.append (BASE_RESOURCE_PATH)
 
-import common
-
 class SubstitutePlayer(xbmc.Player):
     def __init__(self):
         xbmc.Player.__init__(self)
         self.prev_settings = {}
         self.refreshSettings()
-        self.timeron = False		
+        self.TimerON = False
 
     def onPlayBackStarted(self):
         self.refreshSettings()
-        if self.mode != '0' and xbmc.Player().isPlayingVideo() == True and self.timeron == False:
+        if self.mode != '0' and xbmc.Player().isPlayingVideo() == True and self.TimerON == False:
             if self.mode == '1':
+                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Pausing torrents...",5000, __icon__))			
                 self.stopAllTorrents()
             elif self.mode == '2':
                 self.enableSpeedLimit()
@@ -40,9 +40,9 @@ class SubstitutePlayer(xbmc.Player):
             xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Torrents will be started in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
         elif self.mode == '2' and not xbmc.Player().isPlayingVideo():
             xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Speed limited will be disabled in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
-        self.timeron = True
+        self.TimerON = True
         xbmc.sleep(int(self.seconds))
-        self.timeron = False		
+        self.TimerON = False		
         if self.mode == '1' and xbmc.Player().isPlayingVideo() == False:
             self.startAllTorrents()
         elif self.mode == '2' and xbmc.Player().isPlayingVideo() == False:
@@ -58,14 +58,13 @@ class SubstitutePlayer(xbmc.Player):
 			
     def startAllTorrents(self):
         if self.transmission:
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Starting torrents...",5000, __icon__))			
+            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Starting torrents...",5000, __icon__))
             torrents = self.transmission.list()
             for tid, torrent in torrents.iteritems():
                 self.transmission.start(tid)
 
     def stopAllTorrents(self):
-        if self.transmission:
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Pausing torrents...",5000, __icon__))		
+        while self.transmission and xbmc.Player().isPlayingVideo() == True:
             torrents = self.transmission.list()
             for tid, torrent in torrents.iteritems():
 				if self.keep_seeding == 'true' and torrent.status not in ('seeding'):
@@ -77,7 +76,9 @@ class SubstitutePlayer(xbmc.Player):
 				elif self.keep_seeding == 'true' and torrent.status in ('seeding'):
 				    print "[Transmission Debug] - Not Pausing: " + str(torrent.name) + " - " + str(torrent.status)
 				else:
-				    print "[Transmission Debug] - None criteria met"				
+				    print "[Transmission Debug] - None criteria met"
+            xbmc.sleep(120000)
+				
 
     def refreshSettings(self):
         settings = common.get_settings()
