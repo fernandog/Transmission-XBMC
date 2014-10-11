@@ -7,7 +7,6 @@ import xbmc, xbmcaddon, xbmcgui
 import transmissionrpc
 import urllib
 import subprocess
-import common
 
 __settings__ = xbmcaddon.Addon(id='script.transmission')
 __addon__       = xbmcaddon.Addon()
@@ -16,6 +15,8 @@ __icon__        = __addon__.getAddonInfo('icon')
 
 BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( __settings__.getAddonInfo('path'), 'resources', 'lib' ) )
 sys.path.append (BASE_RESOURCE_PATH)
+
+import common
 
 class SubstitutePlayer(xbmc.Player):
     def __init__(self):
