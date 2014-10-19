@@ -8,4 +8,5 @@
     <setting id="action_on_playback" type="enum" label="32805" lvalues="32806|32807|32808" />
     <setting id="seconds_playback_finished" type="slider" label="32809" range="1,60" default="1" option="int" />
     <setting id="seeding_torrents" type="bool" label="32810" default="true" />
+    <setting id="show_notifications" type="bool" label="32811" default="false" />	
 </settings>

@@ -29,7 +29,8 @@ class SubstitutePlayer(xbmc.Player):
         self.refreshSettings()
         if self.mode != '0' and xbmc.Player().isPlayingVideo() == True and self.TimerON == False:
             if self.mode == '1':
-                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Pausing torrents...",5000, __icon__))			
+                if self.show_notifications == 'true':
+                    xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Pausing torrents...",5000, __icon__))			
                 self.stopAllTorrents()
             elif self.mode == '2':
                 self.enableSpeedLimit()
@@ -38,9 +39,11 @@ class SubstitutePlayer(xbmc.Player):
         xbmc.sleep(1)
         self.refreshSettings()
         if self.mode == '1' and not xbmc.Player().isPlayingVideo():
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Torrents will be started in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
+            if self.show_notifications == 'true':
+                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Torrents will be started in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
         elif self.mode == '2' and not xbmc.Player().isPlayingVideo():
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Speed limited will be disabled in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
+            if self.show_notifications == 'true':
+                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Speed limited will be disabled in " + str(self.seconds/1000) + " seconds",5000, __icon__))	
         self.TimerON = True
         xbmc.sleep(int(self.seconds))
         self.TimerON = False		
@@ -49,7 +52,8 @@ class SubstitutePlayer(xbmc.Player):
         elif self.mode == '2' and xbmc.Player().isPlayingVideo() == False:
             self.disableSpeedLimit()
         else:
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Still watching. Torrents still paused/limited",5000, __icon__))			
+            if self.show_notifications == 'true':
+                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Still watching. Torrents still paused/limited",5000, __icon__))			
 
     def onPlayBackEnded(self):
         self.ResumingTorrents()
@@ -59,7 +63,8 @@ class SubstitutePlayer(xbmc.Player):
 			
     def startAllTorrents(self):
         if self.transmission:
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Starting torrents...",5000, __icon__))
+            if self.show_notifications == 'true':
+                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Starting torrents...",5000, __icon__))
             torrents = self.transmission.list()
             for tid, torrent in torrents.iteritems():
                 self.transmission.start(tid)
@@ -86,6 +91,7 @@ class SubstitutePlayer(xbmc.Player):
         if settings != self.prev_settings:
             self.mode = settings['action_on_playback']
             self.keep_seeding = settings['seeding_torrents']			
+            self.show_notifications = settings['show_notifications']			
             self.seconds = int(settings['seconds_playback_finished'])*1000
             try:
                 self.transmission = common.get_rpc_client()
@@ -95,12 +101,14 @@ class SubstitutePlayer(xbmc.Player):
 
     def enableSpeedLimit(self):
         if self.transmission:
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Enabling speed limit...",5000, __icon__))			
+            if self.show_notifications == 'true':
+                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Enabling speed limit...",5000, __icon__))			
             self.transmission.set_session(alt_speed_enabled=True)
 
     def disableSpeedLimit(self):
         if self.transmission:
-            xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Disabling speed limit...",5000, __icon__))	            		
+            if self.show_notifications == 'true':		
+                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,"Disabling speed limit...",5000, __icon__))	            		
             self.transmission.set_session(alt_speed_enabled=False)
 
 player = SubstitutePlayer()

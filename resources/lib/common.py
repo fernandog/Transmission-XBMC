@@ -14,7 +14,8 @@ def get_settings():
         'password': __settings__.getSetting('rpc_password'),
         'action_on_playback': __settings__.getSetting('action_on_playback'),
         'seconds_playback_finished': __settings__.getSetting('seconds_playback_finished'),
-        'seeding_torrents': __settings__.getSetting('seeding_torrents')		
+        'seeding_torrents': __settings__.getSetting('seeding_torrents'),
+        'show_notifications': __settings__.getSetting('show_notifications')
     }
     return params
 

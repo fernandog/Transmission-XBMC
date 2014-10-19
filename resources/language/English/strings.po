@@ -192,8 +192,12 @@ msgctxt "#32810"
 msgid "Don't pause seeding torrents"
 msgstr ""
 
+msgctxt "#32811"
+msgid "Show notifications on screen"
+msgstr ""
+
 #Errors
-#empty strings from id 32811 to 32899
+#empty strings from id 32812 to 32899
 
 msgctxt "#32900"
 msgid "An unexpected error occurred"
